@@ -1,3 +1,6 @@
+using Bookify.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Bookify
 {
     public class Program
@@ -8,8 +11,16 @@ namespace Bookify
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            var app = builder.Build();
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(ConnectionString);
+            });
+
+
+			var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
