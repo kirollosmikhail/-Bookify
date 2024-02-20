@@ -28,6 +28,7 @@ namespace Bookify.Controllers
         }
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		//cross side request forgery attack
         public IActionResult Create(CategoryFormViewModel model)
         {
 			if (!ModelState.IsValid)
