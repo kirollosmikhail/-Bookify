@@ -1,4 +1,5 @@
-﻿function showSuccessMessage(message = 'Saved successfully!') {
+﻿var updatedRow;
+function showSuccessMessage(message = 'Saved successfully!') {
     Swal.fire({
         icon: "success",
         title: "Success",
@@ -19,10 +20,54 @@ function showErrorMessage(message = 'Something went wrong!') {
         }
     });
 }
+
+function onModalSuccess(item) {
+    showSuccessMessage();
+    $('#Modal').modal('hide');
+
+    if (updatedRow === undefined) {
+        $('tbody').append(item);
+
+    } else {
+        $(updatedRow).replaceWith(item);
+        updatedRow = undefined;
+    }
+
+    KTMenu.init();
+    KTMenu.initHandlers();
+}
+
+
 $(document).ready(function () {
     var message = $("#Message").text();
     if (message !== '') {
         showSuccessMessage(message);
         
     }
+    //Handel Bootstrap modal
+    $('body').delegate('.js-render-modal','click', function () {
+        var btn = $(this);
+        var modal = $('#Modal');
+        modal.find('#ModalLabel').text(btn.data('title'));
+
+        if (btn.data('update') !== undefined) {
+            updatedRow = btn.parents('tr');
+            console.log(updatedRow);
+        }
+
+        $.get({
+            url: btn.data('url'),
+            success: function (form) {
+                modal.find('.modal-body').html(form);
+                $.validator.unobtrusive.parse(modal);
+
+
+            },
+            error: function () {
+                showErrorMessage();
+            }
+        })
+
+        modal.modal('show');
+    })
 });
