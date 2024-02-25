@@ -1,5 +1,5 @@
-using Bookify.Data;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 namespace Bookify
 {
@@ -10,16 +10,18 @@ namespace Bookify
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseSqlServer(ConnectionString);
-            });
+                options.UseSqlServer(connectionString));
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddControllersWithViews();
 
-			var app = builder.Build();
+            builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
+
+            var app = builder.Build();
 
 
             // Configure the HTTP request pipeline.

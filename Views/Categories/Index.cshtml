@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Category>
+﻿@model IEnumerable<CategoryViewModel>
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
 @{
     ViewData["Title"] = "Categories";
@@ -126,59 +126,4 @@
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-
-        
-
-        $(document).ready(function () {
-            $('body').delegate('.js-toggle-status', 'click', function () {
-                var btn = $(this);
-                bootbox.confirm({
-                    message: 'Are you sure that you need to toggle this item status?',
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-danger'
-                        },
-                        cancel: {
-                            label: 'No',
-                            className: 'btn-secondary'
-                        }
-                    },
-                    callback: function (result) {
-                        if (result) {
-                            $.post({
-                                url: '/Categories/ToggleStatus/' + btn.data('id'),
-                                data: {
-                                    '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                                },
-                                success: function (lastUpdateOn) {
-                                    // js-updated-on
-                                    var row = btn.parents('tr');
-                                    var status = row.find('.js-status');
-                                    var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
-                                    status.text(newStatus).toggleClass('badge-light-success badge-light-danger');
-                                    row.find('.js-updated-on').html(lastUpdateOn);
-                                    row.addClass('animate__animated animate__flash');
-
-
-                                    showSuccessMessage();
-                                },
-                                error: function () {
-                                    showErrorMessage();
-                                }
-
-
-                            });
-                        }
-                    }
-                });
-
-
-
-
-            });
-        });
-    </script>
 }
-
