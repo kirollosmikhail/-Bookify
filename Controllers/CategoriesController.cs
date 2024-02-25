@@ -4,7 +4,7 @@ namespace Bookify.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper ;
+        private readonly IMapper _mapper;
 
         public CategoriesController(ApplicationDbContext context, IMapper mapper)
         {
@@ -68,7 +68,7 @@ namespace Bookify.Controllers
                 return NotFound();
 
 
-            category = _mapper.Map(model,category);
+            category = _mapper.Map(model, category);
             category.LastUpdatedOn = DateTime.Now;
 
             _context.SaveChanges();
